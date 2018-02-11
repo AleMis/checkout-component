@@ -1,6 +1,6 @@
 # Checkout Component #
 
-Assumption of this application is that is is a backend tool used by an on-line shop, where customer is able to:
+Assumption of this application is that it is a backend tool used by an on-line shop, where customer is able to:
  * Open new empty basket – the basket is used to store items, 
  * Scan items – customer can select a product of one type and input it’s quantity, 
  * Close basket at any time and return the total price of a number of items.
@@ -40,8 +40,8 @@ Besides above functionalities user of the application is able to:
  2. Application has controller (DiscountController) which gives opportunity to add and remove discounts for products to/from 'discounts' table.
     Discounts should be provided as special price which client could receive for buying one or many units of some products 
     (eg. special price = 50; units = 3, it means that we can buy 3 units for 50)
- 3. BasketController is the main controller of the application. BasketController is responsible for open new basket for the client, adding new product to the basket, and close product to the basket. 
-    Before we add new product to the basket we have to open new basket for the customer. To open new basket of the parameter which should be provided to the method is user id. 
+ 3. BasketController is the main controller of the application. BasketController is responsible for open new basket for the client, adding new product to the basket, and close the basket. 
+    Before we add new product to the basket we have to open new basket for the customer. To open new basket one of parameter which should be provided to the method is user id. 
     Because application is only one microservice there is assumption that other microservice provides opportunity to get user id.  
     After each addition of the product to the basket, controller return information about whether new product was added to the basket (product could no be add to the basket because eg. there is no units available in the warehouse) as well as information about current value of the basket. 
     When customer will finish adding products to the basket, close basket method should be invoke to close customer current basket.
