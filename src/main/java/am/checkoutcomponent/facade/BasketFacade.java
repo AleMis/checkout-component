@@ -11,7 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class BasketFacade {
@@ -28,9 +30,9 @@ public class BasketFacade {
     private BasketValidator basketValidator;
 
     public BasketDto openBasket(Long userId) {
-        Optional<Basket> userBasket = dbService.findBasketByUserId(userId);
-        if (userBasket.isPresent()) {
-            return checkIfBasketIsOpen(userBasket.get(), userId);
+        Basket userBasket = filtrBaskets(userId);
+        if (userBasket != null) {
+            return checkIfBasketIsOpen(userBasket, userId);
         } else {
             LOGGER.info("Basket of user with id = " + userId + " is not available in database.");
             return createNewBasket(userId);
@@ -55,13 +57,29 @@ public class BasketFacade {
     }
 
     public BasketDto closeUserBasket(Long userId) {
-        Optional<Basket> userBasket = dbService.findBasketByUserId(userId);
-        userBasket.get().setOpen(false);
+        Basket userBasket = filtrBaskets(userId);
+        userBasket.setOpen(false);
         LOGGER.info("Basket of user with id = " +  userId + " was closed!");
-        return basketMapper.convertToBasketDto(dbService.saveBasket(userBasket.get()));
+        return basketMapper.convertToBasketDto(dbService.saveBasket(userBasket));
     }
 
     public BasketResponseDto addNewProductToBasket(Long userId, String productIndividualNumber, Integer units) {
         return basketValidator.validateBasket(userId, productIndividualNumber, units);
+    }
+
+    private Basket filtrBaskets(Long userId) {
+        List<Basket> userBaskets = dbService.findAllBasketsByUserId(userId);
+        Basket basket = null;
+        if(userBaskets.size() == 0) {
+            return new Basket();
+        }else {
+            List<Basket> filteredUserBasket = userBaskets.stream().filter(Basket::isOpen).collect(Collectors.toList());
+            if(filteredUserBasket.size() == 1) {
+                basket =  filteredUserBasket.get(0);
+            }else {
+                return new Basket();
+            }
+        }
+        return basket;
     }
 }

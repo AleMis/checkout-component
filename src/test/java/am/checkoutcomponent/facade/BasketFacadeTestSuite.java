@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
@@ -38,12 +39,14 @@ public class BasketFacadeTestSuite {
     @Test
     public void testOpenBasketWhenIsClosed() {
         //Given
-        Optional<Basket> closedBasket = Optional.of(new Basket(1L, false));
+        Basket closedBasket = new Basket(1L, false);
+        List<Basket> basketList = new ArrayList<>();
+        basketList.add(closedBasket);
 
         Basket newBasket = new Basket(1L, true);
         BasketDto basketDto = new BasketDto(1L, 1L, true, new BigDecimal(0.00), new ArrayList<BasketProduct>());
 
-        when(dbService.findBasketByUserId(anyLong())).thenReturn(closedBasket);
+        when(dbService.findAllBasketsByUserId(anyLong())).thenReturn(basketList);
         when(dbService.saveBasket(anyObject())).thenReturn(newBasket);
         when(basketMapper.convertToBasketDto(anyObject())).thenReturn(basketDto);
 
@@ -59,16 +62,15 @@ public class BasketFacadeTestSuite {
     @Test
     public void testOpenBasketWhenThereIsNoBasket() {
         //Given
-        Optional<Basket> closedBasket = Optional.empty();
+        List<Basket> basketList = new ArrayList<>();
 
         Basket newBasket = new Basket(1L, true);
         List<BasketProduct> basketProductList = new ArrayList<>();
         BasketDto basketDto = new BasketDto(1L, 1L, true, new BigDecimal(0.00), basketProductList);
 
-        when(dbService.findBasketByUserId(anyLong())).thenReturn(closedBasket);
+        when(dbService.findAllBasketsByUserId(anyLong())).thenReturn(basketList);
         when(dbService.saveBasket(anyObject())).thenReturn(newBasket);
         when(basketMapper.convertToBasketDto(anyObject())).thenReturn(basketDto);
-
 
         //When
         BasketDto createdNewBasket = basketFacade.openBasket(1L);
@@ -81,21 +83,27 @@ public class BasketFacadeTestSuite {
 
     @Test
     public void testCloseUserBasket() {
-        Optional<Basket> userBasket = Optional.of(new Basket(1L, false));
-        Basket closedUserBasket = userBasket.get();
-        closedUserBasket.setOpen(false);
-        List<BasketProduct> basketProductList = new ArrayList<>();
-        BasketDto basketDto = new BasketDto(1L, 1L, true, new BigDecimal(0.00), basketProductList);
+        //Given
+        Basket userBasket = new Basket(1L, true);
+        List<Basket> basketList = new ArrayList<>();
+        basketList.add(userBasket);
 
-        when(dbService.findBasketByUserId(anyLong())).thenReturn(userBasket);
-        when(dbService.saveBasket(closedUserBasket)).thenReturn(closedUserBasket);
-        when(basketMapper.convertToBasketDto(closedUserBasket)).thenReturn(basketDto);
+        when(dbService.findAllBasketsByUserId(1L)).thenReturn(basketList);
+
+        userBasket.setOpen(false);
+
+        when(dbService.saveBasket(anyObject())).thenReturn(userBasket);
+
+        List<BasketProduct> basketProductList = new ArrayList<>();
+        BasketDto basketDto = new BasketDto(1L, 1L, false, new BigDecimal(0.00), basketProductList);
+
+        when(basketMapper.convertToBasketDto(userBasket)).thenReturn(basketDto);
 
         //When
-        BasketDto closedBasket = basketFacade.closeUserBasket(anyLong());
+        BasketDto closedBasket = basketFacade.closeUserBasket(1L);
 
         //Then
-        assertTrue(closedBasket.isOpen());
+        assertFalse(closedBasket.isOpen());
         assertEquals(1L, closedBasket.getId().longValue());
     }
 }
