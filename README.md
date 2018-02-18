@@ -14,12 +14,13 @@ Besides above functionalities user of the application is able to:
  * Java - main programming language
  * Spring Boot, Spring MVC, Spring WEB, Hibernate - frameworks
  * Gradle - dependency management
- * MySQL - databaseg
+ * MySQL - database
+ * JUnit and Mockito - tests
 
 ### Prerequesites ###
 
-* Gradle
-* MySQL
+ * Gradle
+ * MySQL
 
 ### How to run ###
 
@@ -29,7 +30,7 @@ Besides above functionalities user of the application is able to:
 4. Run all queries from 'db_scheme_sql' which create tables and sample data.  
 5. Update 'spring.datasource.username' and 'spring.datasource.password' in application.properties file according to your database settings. 
 6. Build project using 'gradlew build' command. 
-7. Run the application. You can test application using eg. Postman.
+7. Run the application. You can test application using e.g. Postman.
 
  ### Main assumption and how application works ###
  
