@@ -42,12 +42,14 @@ public class BasketValidator {
         Optional<Product> product = dbService.getProductByIndividualNumber(productIndividualNumber);
 
         WarehouseConfirmationDto warehouseConfirmationDto = warehouseValidator.checkProductAvailability(product.get().getId(), units);
+
         BasketProduct basketProduct = createBasketProduct(warehouseConfirmationDto, productIndividualNumber, units);
+
         if(basketProduct.getProductIndividualNumber() != null) {
             if(basketProduct.getProductIndividualNumber().equals(productIndividualNumber)) {
                 userOpenBasket.getBasketProductList().add(basketProduct);
                 basketProduct.setBasket(userOpenBasket);
-                LOGGER.info("New product was added to basket.");
+                LOGGER.info("New product [ "+ basketProduct.getProductIndividualNumber() + " ] was added to basket.");
             }
         }
 
@@ -65,7 +67,7 @@ public class BasketValidator {
         return basketMapper.convertToBasketDto(dbService.saveBasket(userBasket));
     }
 
-    public BasketProduct createBasketProduct(WarehouseConfirmationDto warehouseConfirmationDto, String productIndividualNumber, Integer units) {
+    private BasketProduct createBasketProduct(WarehouseConfirmationDto warehouseConfirmationDto, String productIndividualNumber, Integer units) {
         BasketProduct basketProduct = new BasketProduct();
         if(warehouseConfirmationDto.isProductAvailable()) {
             Optional<Discount> discount  = dbService.getDiscountByProductIndividualNumber(productIndividualNumber);
@@ -114,8 +116,7 @@ public class BasketValidator {
     }
 
     private BigDecimal calculatePriceIfOrderIsLowerThanDiscountUnits(Product product, Integer units) {
-        BigDecimal finalPrice = product.getBasePrice().multiply(new BigDecimal(units));
-        return finalPrice;
+        return product.getBasePrice().multiply(new BigDecimal(units));
     }
 
     private int compareUnits(Discount discount, Integer units) {

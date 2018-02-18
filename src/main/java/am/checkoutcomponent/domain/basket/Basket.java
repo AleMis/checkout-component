@@ -1,8 +1,6 @@
 package am.checkoutcomponent.domain.basket;
 
-
 import am.checkoutcomponent.domain.basket.product.BasketProduct;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

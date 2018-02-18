@@ -19,6 +19,12 @@ import java.math.BigDecimal;
 @Table(name = "basket_products")
 public class BasketProduct {
 
+    public BasketProduct(String productIndividualNumber, Integer units, BigDecimal price) {
+        this.productIndividualNumber = productIndividualNumber;
+        this.units = units;
+        this.price = price;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "basket_product_id")

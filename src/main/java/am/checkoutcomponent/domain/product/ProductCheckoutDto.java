@@ -11,6 +11,6 @@ import lombok.ToString;
 @ToString
 public class ProductCheckoutDto {
 
-    private boolean wasCreated;
+    private boolean created;
     private ProductDto productDto;
 }

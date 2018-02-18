@@ -39,7 +39,7 @@ public class BasketFacade {
 
     private BasketDto checkIfBasketIsOpen(Basket userBasket, Long userId) {
         if(userBasket.isOpen()) {
-            LOGGER.info("Basket of user with id = " + userId + " was download from database [basekt id = " + userBasket.getId() + " ]");
+            LOGGER.info("Basket of user with id = " + userId + " was download from database [basket id = " + userBasket.getId() + " ]");
             return basketMapper.convertToBasketDto(userBasket);
         }else {
             LOGGER.info("Basket of user with id = " + userId + " is closed.");
@@ -64,7 +64,4 @@ public class BasketFacade {
     public BasketResponseDto addNewProductToBasket(Long userId, String productIndividualNumber, Integer units) {
         return basketValidator.validateBasket(userId, productIndividualNumber, units);
     }
-
-
-
 }

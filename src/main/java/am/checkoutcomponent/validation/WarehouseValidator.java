@@ -37,7 +37,7 @@ public class WarehouseValidator {
             return new WarehouseConfirmationDto(true, "Product [ " + warehouse.getProductIndividualNumber() + " ] was added to the basket." );
         }else {
             LOGGER.error("Product [ " + warehouse.getProductIndividualNumber() + " ] can not be added to the basket because in warehouse has " + warehouse.getUnits() + " units vs order units " + units);
-            return new WarehouseConfirmationDto(false, "Product [ " + warehouse.getProductIndividualNumber() + " ] was not added to the basket. Units available: " + units);
+            return new WarehouseConfirmationDto(false, "Product [ " + warehouse.getProductIndividualNumber() + " ] was not added to the basket. Units available: " + warehouse.getUnits());
         }
     }
 }

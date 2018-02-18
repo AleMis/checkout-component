@@ -5,11 +5,11 @@ import am.checkoutcomponent.domain.product.ProductDto;
 import am.checkoutcomponent.facade.ProductFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
-@RequestMapping("v1/online_shop/products")
+@RequestMapping("/v1/online_shop/products")
 public class ProductController {
 
     @Autowired
@@ -17,7 +17,6 @@ public class ProductController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/create_product")
     public ProductCheckoutDto saveProduct(@RequestBody ProductDto productDto) {
-        System.out.println(productDto);
         return productFacade.checkProduct(productDto);
     }
 
